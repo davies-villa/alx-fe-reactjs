@@ -1,3 +1,5 @@
+
+
 function Footer() {
     return (
       <footer style={{ padding: '10px', backgroundColor: '#282c34', color: 'white', textAlign: 'center' }}>
