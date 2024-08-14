@@ -1,8 +1,14 @@
 import React from 'react';
-import UserInfo from './UserInfo';
+import UserProfile from './UserProfile';
 
 function ProfilePage() {
-  return <UserInfo />;
+  return (
+    <div style={{
+    }}>
+      <h1>Profile Page</h1>
+      <UserProfile />
+    </div>
+  );
 }
 
 export default ProfilePage;
