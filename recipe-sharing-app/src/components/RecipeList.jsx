@@ -1,8 +1,14 @@
+// src/components/RecipeList.jsx
+import React, { useEffect } from 'react';
 import { useRecipeStore } from './recipeStore';
 
-
 const RecipeList = () => {
-  const recipes = useRecipeStore((state) => state.recipes);
+  const recipes = useRecipeStore((state) => state.filteredRecipes);
+  const filterRecipes = useRecipeStore((state) => state.filterRecipes);
+
+  useEffect(() => {
+    filterRecipes();
+  }, [filterRecipes]);
 
   return (
     <div>
