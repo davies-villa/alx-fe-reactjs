@@ -1,48 +1,53 @@
 import React, { useState } from 'react';
 
 const RegistrationForm = () => {
-  const [formData, setFormData] = useState({
-    username: '',
-    email: '',
-    password: '',
-  });
+  // Initializing state for form fields
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-  };
-
+  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!formData.username || !formData.email || !formData.password) {
-      alert('All fields are required!');
-      return;
-    }
+    // Handle form submission logic
+    console.log({ username, email, password });
   };
 
   return (
     <form onSubmit={handleSubmit}>
-      <input
-        type="text"
-        name="username"
-        value={formData.username}
-        onChange={handleChange}
-        placeholder="Username"
-      />
-      <input
-        type="email"
-        name="email"
-        value={formData.email}
-        onChange={handleChange}
-        placeholder="Email"
-      />
-      <input
-        type="password"
-        name="password"
-        value={formData.password}
-        onChange={handleChange}
-        placeholder="Password"
-      />
+      <div>
+        <label htmlFor="username">Username:</label>
+        <input
+          type="text"
+          id="username"
+          value={username} // Controlled component
+          onChange={(e) => setUsername(e.target.value)} // Updating state
+          placeholder="Enter your username"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="email">Email:</label>
+        <input
+          type="email"
+          id="email"
+          value={email} // Controlled component
+          onChange={(e) => setEmail(e.target.value)} // Updating state
+          placeholder="Enter your email"
+        />
+      </div>
+
+      <div>
+        <label htmlFor="password">Password:</label>
+        <input
+          type="password"
+          id="password"
+          value={password} // Controlled component
+          onChange={(e) => setPassword(e.target.value)} // Updating state
+          placeholder="Enter your password"
+        />
+      </div>
+
       <button type="submit">Register</button>
     </form>
   );
