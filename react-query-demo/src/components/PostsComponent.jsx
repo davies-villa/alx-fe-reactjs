@@ -1,4 +1,3 @@
-// src/components/PostsComponent.jsx
 import React from 'react';
 import { useQuery } from 'react-query';
 
@@ -19,10 +18,10 @@ const PostsComponent = () => {
     refetch,
     isFetching,
   } = useQuery('posts', fetchPosts, {
-    cacheTime: 1000 * 60 * 10, // 10 minutes
-    staleTime: 1000 * 60 * 5, // 5 minutes
-    refetchOnWindowFocus: false, // Do not refetch on window focus
-    keepPreviousData: true, // Keep previous data while fetching new data
+    cacheTime: 1000 * 60 * 10, 
+    staleTime: 1000 * 60 * 5,
+    refetchOnWindowFocus: false, 
+    keepPreviousData: true, 
   });
 
   if (isLoading) {
