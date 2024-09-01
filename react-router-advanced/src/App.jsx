@@ -3,7 +3,7 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Home from './components/Home';
 import Profile from './components/Profile';
 import Post from './components/Post';
-import BlogPost from './components/BlogPost'; // Import the new BlogPost component
+import BlogPost from './components/BlogPost'; 
 import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
