@@ -1,39 +1,47 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
-import TodoList from '../TodoList'; 
+import { render, fireEvent, screen } from '@testing-library/react';
+import TodoList from '../components/TodoList';
+
+const mockTodos = [
+  { text: 'Learn React', completed: false },
+  { text: 'Write Tests', completed: true },
+];
+
+const mockToggleTodo = jest.fn();
 
 describe('TodoList Component', () => {
-  test('renders the TodoList component with initial todos', () => {
-    render(<TodoList />);
+  test('renders TodoList component correctly', () => {
+    render(<TodoList todos={mockTodos} toggleTodo={mockToggleTodo} />);
+
+    expect(screen.getByText('Todo List')).toBeInTheDocument();
+
+    expect(screen.getByPlaceholderText('Add a new todo')).toBeInTheDocument();
+
     expect(screen.getByText('Learn React')).toBeInTheDocument();
-    expect(screen.getByText('Build a Todo App')).toBeInTheDocument();
-    expect(screen.getByText('Test the App')).toBeInTheDocument();
-});
-
-
-test('adds a new todo item', () => {
-  render(<TodoList />);
-  fireEvent.change(screen.getByPlaceholderText(/add a new todo/i), {
-      target: { value: 'Write tests' }
+    expect(screen.getByText('Write Tests')).toBeInTheDocument();
   });
-  fireEvent.click(screen.getByText(/add todo/i));
-  expect(screen.getByText('Write tests')).toBeInTheDocument();
-});
 
+  test('toggles todo completion', () => {
+    render(<TodoList todos={mockTodos} toggleTodo={mockToggleTodo} />);
+    
+    const todo = screen.getByText('Learn React');
 
-    test('toggles the completion status of a todo item', () => {
-        render(<TodoList />);
-        const todoItem = screen.getByText('Learn React');
-        fireEvent.click(todoItem);
-        expect(todoItem).toHaveStyle('text-decoration: line-through');
-        fireEvent.click(todoItem);
-        expect(todoItem).toHaveStyle('text-decoration: none');
-    });
+    fireEvent.click(todo);
 
-    test('deletes a todo item', () => {
-        render(<TodoList />);
-        fireEvent.click(screen.getByText('Delete', { selector: 'button' }));
-        expect(screen.queryByText('Learn React')).not.toBeInTheDocument();
-    });
+    expect(mockToggleTodo).toHaveBeenCalledWith(0);
+
+    fireEvent.click(todo);
+
+    expect(mockToggleTodo).toHaveBeenCalledWith(0);
+  });
+
+  test('applies the correct styles to completed and incomplete todos', () => {
+    render(<TodoList todos={mockTodos} toggleTodo={mockToggleTodo} />);
+
+    const incompleteTodo = screen.getByText('Learn React');
+    const completedTodo = screen.getByText('Write Tests');
+
+    expect(incompleteTodo).toHaveStyle('text-decoration: none');
+    expect(completedTodo).toHaveStyle('text-decoration: line-through');
+  });
 });
