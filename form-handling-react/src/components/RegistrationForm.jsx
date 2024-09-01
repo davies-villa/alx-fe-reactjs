@@ -1,15 +1,26 @@
 import React, { useState } from 'react';
 
 const RegistrationForm = () => {
-  // Initializing state for form fields
+  
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  
+  const [errors, setErrors] = useState({});
 
-  // Function to handle form submission
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Handle form submission logic
+
+    const newErrors = {};
+    if (!username) newErrors.username = 'Username is required';
+    if (!email) newErrors.email = 'Email is required';
+    if (!password) newErrors.password = 'Password is required';
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
     console.log({ username, email, password });
   };
 
@@ -20,10 +31,11 @@ const RegistrationForm = () => {
         <input
           type="text"
           id="username"
-          value={username} // Controlled component
-          onChange={(e) => setUsername(e.target.value)} // Updating state
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter your username"
         />
+        {errors.username && <span>{errors.username}</span>}
       </div>
 
       <div>
@@ -31,10 +43,11 @@ const RegistrationForm = () => {
         <input
           type="email"
           id="email"
-          value={email} // Controlled component
-          onChange={(e) => setEmail(e.target.value)} // Updating state
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="Enter your email"
         />
+        {errors.email && <span>{errors.email}</span>}
       </div>
 
       <div>
@@ -42,10 +55,11 @@ const RegistrationForm = () => {
         <input
           type="password"
           id="password"
-          value={password} // Controlled component
-          onChange={(e) => setPassword(e.target.value)} // Updating state
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
           placeholder="Enter your password"
         />
+        {errors.password && <span>{errors.password}</span>}
       </div>
 
       <button type="submit">Register</button>
