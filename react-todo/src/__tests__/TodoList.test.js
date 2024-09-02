@@ -1,21 +1,34 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
-import TodoList from '../TodoList'; 
+import { render, screen, fireEvent, waitFor } from '@testing-library/react';
+import TodoList from '../TodoList';
 
-test('renders TodoList component correctly', () => {
-  render(<TodoList />);
-  expect(screen.getByText('Learn React')).toBeInTheDocument();
-  expect(screen.getByText('Build a Todo App')).toBeInTheDocument();
-});
+describe('TodoList Component', () => {
+  test('renders TodoList component correctly', () => {
+    render(<TodoList />);
+    expect(screen.getByText('Todo List')).toBeInTheDocument();
+    expect(screen.getByText('Learn React')).toBeInTheDocument();
+    expect(screen.getByText('Build a Todo App')).toBeInTheDocument();
+  });
 
-test('can delete a todo item', () => {
-  render(<TodoList />);
-  
-  const todoItem = screen.getByText('Learn React');
-  
-  const deleteButtons = screen.getAllByText('Delete');
-  
-  fireEvent.click(deleteButtons[0]);
-  
-  expect(todoItem).not.toBeInTheDocument();
+  test('can add a new todo', () => {
+    render(<TodoList />);
+    fireEvent.change(screen.getByPlaceholderText('Add a new todo'), {
+      target: { value: 'New Todo' },
+    });
+    fireEvent.click(screen.getByText('Add'));
+    expect(screen.getByText('New Todo')).toBeInTheDocument();
+  });
+
+  test('can delete a todo item', async () => {
+    render(<TodoList />);
+    
+    const deleteButtons = screen.getAllByText('Delete');
+    const todoItem = screen.getByText('Build a Todo App');
+
+    fireEvent.click(deleteButtons[0]);
+
+    await waitFor(() => {
+      expect(todoItem).not.toBeInTheDocument();
+    });
+  });
 });
