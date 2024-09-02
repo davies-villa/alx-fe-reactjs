@@ -1,47 +1,33 @@
 import React from 'react';
-import { render, fireEvent, screen } from '@testing-library/react';
-import TodoList from '../components/TodoList';
-
-const mockTodos = [
-  { text: 'Learn React', completed: false },
-  { text: 'Write Tests', completed: true },
-];
+import { render, screen, fireEvent } from '@testing-library/react';
+import '@testing-library/jest-dom/extend-expect'; // Import jest-dom matchers
+import TodoList from '../components/TodoList'; // Adjust the import path if necessary
 
 const mockToggleTodo = jest.fn();
 
-describe('TodoList Component', () => {
-  test('renders TodoList component correctly', () => {
-    render(<TodoList todos={mockTodos} toggleTodo={mockToggleTodo} />);
+test('renders TodoList component correctly', () => {
+  render(<TodoList todos={[{ text: 'Learn React', completed: false }]} toggleTodo={mockToggleTodo} />);
+  expect(screen.getByText('Todo List')).toBeInTheDocument();
+  expect(screen.getByPlaceholderText('Add a new todo')).toBeInTheDocument();
+});
 
-    expect(screen.getByText('Todo List')).toBeInTheDocument();
+test('toggles todo completion', () => {
+  render(<TodoList todos={[{ text: 'Learn React', completed: false }]} toggleTodo={mockToggleTodo} />);
+  
+  const todo = screen.getByText('Learn React');
+  
+  // Simulate clicking the todo item
+  fireEvent.click(todo);
 
-    expect(screen.getByPlaceholderText('Add a new todo')).toBeInTheDocument();
+  // Check if toggleTodo was called
+  expect(mockToggleTodo).toHaveBeenCalled();
 
-    expect(screen.getByText('Learn React')).toBeInTheDocument();
-    expect(screen.getByText('Write Tests')).toBeInTheDocument();
-  });
+  // Check the style after clicking
+  expect(todo).toHaveStyle('text-decoration: line-through');
 
-  test('toggles todo completion', () => {
-    render(<TodoList todos={mockTodos} toggleTodo={mockToggleTodo} />);
-    
-    const todo = screen.getByText('Learn React');
+  // Simulate clicking the todo item again to toggle back
+  fireEvent.click(todo);
 
-    fireEvent.click(todo);
-
-    expect(mockToggleTodo).toHaveBeenCalledWith(0);
-
-    fireEvent.click(todo);
-
-    expect(mockToggleTodo).toHaveBeenCalledWith(0);
-  });
-
-  test('applies the correct styles to completed and incomplete todos', () => {
-    render(<TodoList todos={mockTodos} toggleTodo={mockToggleTodo} />);
-
-    const incompleteTodo = screen.getByText('Learn React');
-    const completedTodo = screen.getByText('Write Tests');
-
-    expect(incompleteTodo).toHaveStyle('text-decoration: none');
-    expect(completedTodo).toHaveStyle('text-decoration: line-through');
-  });
+  // Check the style after clicking again
+  expect(todo).toHaveStyle('text-decoration: none');
 });

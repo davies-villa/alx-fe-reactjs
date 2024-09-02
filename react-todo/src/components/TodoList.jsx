@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 
 function TodoList({ todos = [], toggleTodo }) {
   return (
@@ -21,4 +22,15 @@ function TodoList({ todos = [], toggleTodo }) {
   );
 }
 
+TodoList.propTypes = {
+  todos: PropTypes.arrayOf(
+    PropTypes.shape({
+      text: PropTypes.string.isRequired,
+      completed: PropTypes.bool.isRequired,
+    })
+  ).isRequired,
+  toggleTodo: PropTypes.func.isRequired,
+};
+
 export default TodoList;
+
