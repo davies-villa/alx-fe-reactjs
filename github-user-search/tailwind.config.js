@@ -1,24 +1,9 @@
-/** @type {import('tailwindcss').Config} */
-export default {
+module.exports = {
   content: [
-    './index.html',
-    './src/**/*.{js,jsx,ts,tsx}',
+    './src/**/*.{js,jsx,ts,tsx}',  // Ensure this is correctly targeting your files
   ],
   theme: {
-    extend: {
-      colors: {
-        primary: '#1DA1F2', 
-        secondary: '#14171A', 
-      },
-      spacing: {
-        '128': '32rem',
-        '144': '36rem',
-      },
-      fontFamily: {
-        sans: ['Inter', 'sans-serif'],
-        mono: ['Fira Code', 'monospace'],
-      },
-    },
+    extend: {},
   },
   plugins: [],
-};
+}

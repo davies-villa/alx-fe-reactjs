@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { fetchUserData } from './services/githubService';
+import { fetchUserData } from "../services/githubService";
 
 const Search = () => {
   const [username, setUsername] = useState('');
@@ -26,8 +26,8 @@ const Search = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-lg">
-        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
-          <h1 className="text-xl font-bold mb-4 text-center">GitHub User Search</h1>
+        <form onSubmit={handleSubmit} className="bg-blue shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <h1 className="text-red-500 text-xl font-bold mb-4 text-center">GitHub User Search</h1>
 
           {/* Username Input */}
           <div className="mb-4">
