@@ -1,42 +1,50 @@
 import React, { useState } from 'react';
+import { fetchUserData } from '../services/githubService';
 
-const Search = ({ onSearch }) => {
+const Search = () => {
   const [username, setUsername] = useState('');
-  const [location, setLocation] = useState('');
-  const [minRepos, setMinRepos] = useState('');
+  const [userData, setUserData] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const handleSearch = (e) => {
+  const handleSearch = async (e) => {
     e.preventDefault();
-    onSearch({ username, location, minRepos });
+    setLoading(true);
+    setError(null);
+
+    try {
+      const data = await fetchUserData(username);
+      setUserData(data);
+    } catch (err) {
+      setError("Looks like we can't find the user");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
-    <form onSubmit={handleSearch} className="flex flex-col items-center justify-center space-y-4">
-      <input
-        type="text"
-        placeholder="Username"
-        value={username}
-        onChange={(e) => setUsername(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <input
-        type="text"
-        placeholder="Location"
-        value={location}
-        onChange={(e) => setLocation(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <input
-        type="number"
-        placeholder="Minimum Repositories"
-        value={minRepos}
-        onChange={(e) => setMinRepos(e.target.value)}
-        className="p-2 border rounded"
-      />
-      <button type="submit" className="p-4 bg-blue-500 text-white rounded">
-        Search
-      </button>
-    </form>
+    <div>
+      <form onSubmit={handleSearch}>
+        <input
+          type="text"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          placeholder="Enter GitHub username"
+        />
+        <button type="submit">Search</button>
+      </form>
+
+      {loading && <p>Loading...</p>} {/* Conditional rendering using && */}
+      {error && <p>{error}</p>} {/* Conditional rendering using && */}
+
+      {userData && ( // Conditional rendering for user data
+        <div>
+          <h2>{userData.name || userData.login}</h2>
+          <p>Public Repositories: {userData.public_repos}</p>
+          <a href={userData.html_url} target="_blank" rel="noopener noreferrer">View Profile</a>
+        </div>
+      )}
+    </div>
   );
 };
 
