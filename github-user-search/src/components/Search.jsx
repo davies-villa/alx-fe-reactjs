@@ -34,18 +34,19 @@ const Search = () => {
         <button type="submit">Search</button>
       </form>
 
-      {loading && <p>Loading...</p>} {/* Conditional rendering using && */}
-      {error && <p>{error}</p>} {/* Conditional rendering using && */}
+      {loading && <p>Loading...</p>} 
+      {error && <p>{error}</p>} 
 
-      {userData && ( // Conditional rendering for user data
+      {userData && ( 
         <div>
           <h2>{userData.name || userData.login}</h2>
           <p>Public Repositories: {userData.public_repos}</p>
           <a href={userData.html_url} target="_blank" rel="noopener noreferrer">View Profile</a>
         </div>
       )}
-    </div>
+      </div>
   );
 };
 
 export default Search;
+
