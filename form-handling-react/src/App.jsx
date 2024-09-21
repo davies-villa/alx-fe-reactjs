@@ -5,7 +5,7 @@ function App() {
   return (
     <div className="App">
       <header>
-        <h1>Registration Form</h1>
+        <h1>Registration form</h1>
       </header>
       <main>
         <FormikForm />
