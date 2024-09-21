@@ -30,8 +30,9 @@ const Search = () => {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           placeholder="Enter GitHub username"
+          className='border p-2 rounded-md'
         />
-        <button type="submit">Search</button>
+        <button type="submit" className='border p-2 rounded-md bg-blue-500 text-white hover:bg-blue-400'>Search</button>
       </form>
 
       {loading && <p>Loading...</p>}
