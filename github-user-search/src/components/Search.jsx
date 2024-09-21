@@ -1,66 +1,112 @@
 import React, { useState } from 'react';
-import { fetchUserData } from '../services/githubService';
+import { fetchUserData } from './services/githubService';
 
 const Search = () => {
-    const [username, setUsername] = useState('');
-    const [userData, setUserData] = useState(null);
-    const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
+  const [username, setUsername] = useState('');
+  const [location, setLocation] = useState('');
+  const [minRepos, setMinRepos] = useState('');
+  const [results, setResults] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
-    const handleInputChange = (e) => {
-        setUsername(e.target.value);
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+    try {
+      const data = await fetchUserData({ username, location, minRepos });
+      setResults(data);
+      if (data.length === 0) setError('No users found');
+    } catch (err) {
+      setError('Error fetching data');
+    }
+    setLoading(false);
+  };
 
-    const handleFormSubmit = async (e) => {
-        e.preventDefault();
-        setLoading(true);
-        setError('');
-        setUserData(null);
+  return (
+    <div className="flex justify-center items-center h-screen bg-gray-100">
+      <div className="w-full max-w-lg">
+        <form onSubmit={handleSubmit} className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4">
+          <h1 className="text-xl font-bold mb-4 text-center">GitHub User Search</h1>
 
-        try {
-            const data = await fetchUserData(username);
-            setUserData(data);
-        } catch (error) {
-            setError('Looks like we cant find the user');
-        } finally {
-            setLoading(false);
-        }
-    };
+          {/* Username Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="username">
+              Username
+            </label>
+            <input
+              id="username"
+              type="text"
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Enter GitHub username"
+            />
+          </div>
 
-    return (
-        <div className="search-container h-screen">
-            <form onSubmit={handleFormSubmit} className="w-full flex flex-col items-center justify-center gap-4">
-                <input
-                    type="text"
-                    placeholder="Search GitHub Username"
-                    value={username}
-                    onChange={handleInputChange}
-                    className="p-2 border border-blue-300 rounded"
-                />
-                <button
-                    type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded-full hover:bg-blue-600"
-                >
-                    Search
-                </button>
-            </form>
+          {/* Location Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="location">
+              Location
+            </label>
+            <input
+              id="location"
+              type="text"
+              value={location}
+              onChange={(e) => setLocation(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Enter location"
+            />
+          </div>
 
+          {/* Minimum Repos Input */}
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="minRepos">
+              Minimum Repositories
+            </label>
+            <input
+              id="minRepos"
+              type="number"
+              value={minRepos}
+              onChange={(e) => setMinRepos(e.target.value)}
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+              placeholder="Enter minimum repo count"
+            />
+          </div>
 
-            {loading && <p>Loading...</p>}
-            {error && <p>{error}</p>}
-            {userData && (
-                <div className="user-details lex flex-col items-center justify-center">
-                    <img src={userData.avatar_url} alt={userData.login} className="avatar " />
-                    <h2>{userData.name}</h2>
-                    <p>
-                        <a href={userData.html_url} target="_blank" rel="noopener noreferrer">
-                            Visit Profile
-                        </a>
-                    </p>
-                </div>
-            )}
+          {/* Submit Button */}
+          <div className="flex items-center justify-between">
+            <button
+              type="submit"
+              className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            >
+              Search
+            </button>
+          </div>
+        </form>
+
+        {/* Results Section */}
+        <div className="bg-white shadow-md rounded px-8 py-6 mt-4">
+          {loading && <p>Loading...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {results.length > 0 && (
+            <ul className="space-y-4">
+              {results.map((user) => (
+                <li key={user.id} className="flex items-center space-x-4">
+                  <img src={user.avatar_url} alt={user.login} className="w-10 h-10 rounded-full" />
+                  <div>
+                    <a href={user.html_url} className="font-bold text-blue-500 hover:underline">{user.login}</a>
+                    <p>{user.location}</p>
+                    <p>Repos: {user.public_repos}</p>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          )}
         </div>
-    );
+      </div>
+    </div>
+  );
 };
 
 export default Search;
