@@ -3,7 +3,7 @@ import { fetchUserData } from '../services/githubService';
 
 const Search = () => {
   const [username, setUsername] = useState('');
-  const [userData, setUserData] = useState(null);
+  const [users, setUsers] = useState([]); 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
@@ -13,10 +13,11 @@ const Search = () => {
     setError(null);
 
     try {
-      const data = await fetchUserData(username);
-      setUserData(data);
+      const response = await fetch(`https://api.github.com/search/users?q=${username}`);
+      const data = await response.json();
+      setUsers(data.items); 
     } catch (err) {
-      setError("Looks like we can't find the user");
+      setError("Looks like we can't find any users");
     } finally {
       setLoading(false);
     }
@@ -34,19 +35,22 @@ const Search = () => {
         <button type="submit">Search</button>
       </form>
 
-      {loading && <p>Loading...</p>} 
-      {error && <p>{error}</p>} 
+      {loading && <p>Loading...</p>}
+      {error && <p>{error}</p>}
 
-      {userData && ( 
+      {users.length > 0 && ( 
         <div>
-          <h2>{userData.name || userData.login}</h2>
-          <p>Public Repositories: {userData.public_repos}</p>
-          <a href={userData.html_url} target="_blank" rel="noopener noreferrer">View Profile</a>
+          {users.map(user => ( 
+            <div key={user.id}>
+              <h2>{user.login}</h2>
+              <p>Public Repositories: {user.public_repos}</p> 
+              <a href={user.html_url} target="_blank" rel="noopener noreferrer">View Profile</a>
+            </div>
+          ))}
         </div>
       )}
-      </div>
+    </div>
   );
 };
 
 export default Search;
-
