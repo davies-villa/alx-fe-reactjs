@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { fetchUserData } from '../services/githubService'; 
 
 const Search = () => {
   const [username, setUsername] = useState('');
@@ -12,8 +13,7 @@ const Search = () => {
     setError(null);
 
     try {
-      const response = await fetch(`https://api.github.com/search/users?q=${username}`);
-      const data = await response.json();
+      const data = await fetchUserData(username); 
       setUsers(data.items); 
     } catch (err) {
       setError("Looks like we can't find any users");
@@ -42,7 +42,7 @@ const Search = () => {
           {users.map(user => (
             <div key={user.id}>
               <h2>{user.login}</h2>
-              <p>Location: {user.location ? user.location : 'Not specified'}</p> 
+              <p>Location: {user.location ? user.location : 'Not specified'}</p>
               <p>Public Repositories: {user.public_repos}</p> 
               <a href={user.html_url} target="_blank" rel="noopener noreferrer">View Profile</a>
             </div>
